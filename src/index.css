@@ -1,0 +1,210 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Syne', sans-serif;
+}
+
+body {
+  background: #0f0f0f;
+  color: #f5f5f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive helpers */
+img { max-width: 100%; height: auto; display: block; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; width: 100%; }
+
+.home-typewriter-text {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 2px solid rgba(255, 255, 255, 0.85);
+  animation: blink-cursor 0.7s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  from, to { border-color: transparent; }
+  50% { border-color: rgba(255, 255, 255, 0.85); }
+}
+
+.post-detail-page {
+  min-height: 100vh;
+  background: #0f0f0f;
+  color: #f5f5f5;
+  padding: 1.5rem 1rem;
+}
+
+.post-detail-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #ff6b00;
+  text-decoration: none;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  font-weight: bold;
+}
+
+.post-detail-card {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  background: #1a1a1a;
+  border-radius: 16px;
+  border: 1px solid #2a2a2a;
+  overflow: hidden;
+  box-shadow: 0 10px 38px rgba(0,0,0,0.55);
+}
+
+.post-detail-actions-section {
+  margin-top: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid #2a2a2a;
+}
+
+.post-detail-actions-title {
+  color: #aaa;
+  font-size: 0.82rem;
+  margin-bottom: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.post-detail-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.post-detail-action-btn {
+  flex: 1 1 48%;
+  min-width: 160px;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #ff6b00;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-decoration: none;
+  text-align: center;
+  box-sizing: border-box;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.post-detail-action-btn:hover,
+.post-detail-action-btn:active {
+  transform: translateY(-1px);
+  background: #ff7d1f;
+  box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+}
+
+.post-detail-action-secondary {
+  background: #ffa047;
+}
+
+.post-detail-action-disabled {
+  background: #444;
+  color: #ccc;
+  cursor: default;
+}
+
+.post-detail-action-secondary:hover {
+  transform: translateY(-1px);
+  background: #ffb86c;
+}
+
+@media (max-width: 500px) {
+  .post-detail-page { padding: 1.2rem 0.9rem; }
+  .post-detail-actions { gap: 0.65rem; }
+  .post-detail-action-btn { flex: 1 1 100%; min-width: auto; }
+}
+
+.post-detail-whatsapp-btn {
+  flex: 1 1 48%;
+  min-width: 160px;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #25D366;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-decoration: none;
+  text-align: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.post-detail-whatsapp-btn:hover,
+.post-detail-whatsapp-btn:active {
+  transform: translateY(-1px);
+  background: #29cc6b;
+  box-shadow: 0 10px 20px rgba(37, 211, 102, 0.25);
+}
+
+/* Navbar responsiveness */
+.site-nav { position: relative; }
+.nav-actions { display: flex; gap: 1.5rem; align-items: center; }
+.mobile-toggle { display: none; }
+.mobile-menu { display: none; }
+
+@media (max-width: 768px) {
+  .nav-actions { display: none !important; }
+  .mobile-toggle { display: block !important; }
+  .site-nav { padding: 0.75rem 1rem; }
+}
+
+@media (min-width: 769px) {
+  .mobile-menu { display: none !important; }
+}
+
+/* Fluid typography for headings */
+h1 { font-size: clamp(1.6rem, 4vw, 2.8rem); }
+h2 { font-size: clamp(1.25rem, 3.2vw, 1.6rem); }
+
+/* Small-screen spacing fixes */
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .container { padding: 0 0.75rem; }
+}
+
+/* Leaflet fixes: ensure controls stay attached to the map and stack correctly */
+.leaflet-container { position: relative !important; z-index: 0; }
+.leaflet-control { position: absolute !important; z-index: 600 !important; }
+.leaflet-top, .leaflet-bottom { z-index: 600; }
+.leaflet-control-container { pointer-events: auto; }
+
+/* If any ancestor uses transform, leaflet can misposition controls; this rule guards typical cases */
+.site-nav, footer, .container, .leaflet-container { transform: none !important }
