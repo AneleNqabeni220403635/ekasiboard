@@ -171,6 +171,12 @@ export default function CreatePost() {
           style={{ height: '100vh', width: '100vw' }}
         >
           <TileLayer url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' />
+          {/* Labels overlay (roads/streets) */}
+          <TileLayer
+            attribution='Labels: Esri'
+            url='https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}'
+            opacity={0.9}
+          />
         </MapContainer>
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(10,5,0,0.72)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 110%, rgba(255,107,0,0.18) 0%, transparent 65%)' }} />

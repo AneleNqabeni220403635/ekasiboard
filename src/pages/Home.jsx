@@ -159,6 +159,12 @@ export default function Home() {
             attribution='&copy; Esri & contributors'
             url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
           />
+          {/* Labels overlay (roads/streets) */}
+          <TileLayer
+            attribution='Labels: Esri'
+            url='https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}'
+            opacity={0.9}
+          />
         </MapContainer>
       </div>
 
