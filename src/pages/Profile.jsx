@@ -9,6 +9,7 @@ export default function Profile() {
   const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [callmebotApiKey, setCallmebotApiKey] = useState('')
   const [whatsappNotifications, setWhatsappNotifications] = useState(true)
   const [loading, setLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
@@ -22,6 +23,7 @@ export default function Profile() {
       setFullName(profile.full_name || '')
       setUsername(profile.username || '')
       setPhoneNumber(profile.phone_number || '')
+      setCallmebotApiKey(profile.callmebot_apikey || '')
       setWhatsappNotifications(profile.whatsapp_notifications ?? true)
     }
   }, [user, profile])
@@ -37,6 +39,7 @@ export default function Profile() {
         full_name: fullName.trim(),
         username: username.trim(),
         phone_number: phoneNumber.trim(),
+        callmebot_apikey: callmebotApiKey.trim(),
         whatsapp_notifications: whatsappNotifications,
       })
       .eq('id', user.id)
@@ -219,10 +222,28 @@ export default function Profile() {
           value={phoneNumber}
           onChange={e => setPhoneNumber(e.target.value)}
           style={inputStyle}
-          placeholder="e.g. 0678762327"
+          placeholder="e.g. +277831234567"
           onFocus={e => e.target.style.borderColor = '#ff6b00'}
           onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
         />
+
+        {/* CallMeBot API Key */}
+        <label style={labelStyle}>CallMeBot API Key</label>
+        <input
+          type="text"
+          value={callmebotApiKey}
+          onChange={e => setCallmebotApiKey(e.target.value)}
+          style={inputStyle}
+          placeholder="Your personal CallMeBot API key"
+          onFocus={e => e.target.style.borderColor = '#ff6b00'}
+          onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
+        />
+        <p style={{ fontSize: '0.78rem', color: '#666', marginTop: '-0.6rem', marginBottom: '1rem', lineHeight: '1.4' }}>
+          To receive WhatsApp notifications, send <strong style={{ color: '#888' }}>"I allow callmebot to send me messages"</strong> to <strong style={{ color: '#888' }}>+34 644 59 72 23</strong> on WhatsApp, then paste your API key above.{' '}
+          <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noopener noreferrer" style={{ color: '#ff6b00', textDecoration: 'none' }}>
+            Get your key →
+          </a>
+        </p>
 
         <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1rem', color: '#ddd', fontSize: '0.95rem', lineHeight: '1.4' }}>
           <input
