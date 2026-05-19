@@ -239,7 +239,7 @@ export default function Profile() {
           onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
         />
         <p style={{ fontSize: '0.78rem', color: '#666', marginTop: '-0.6rem', marginBottom: '1rem', lineHeight: '1.4' }}>
-          To receive WhatsApp notifications, send <strong style={{ color: '#888' }}>"I allow callmebot to send me messages"</strong> to <strong style={{ color: '#888' }}>+34 644 59 72 23</strong> on WhatsApp, then paste your API key above.{' '}
+          To receive WhatsApp notifications, send <strong style={{ color: '#888' }}>"I allow callmebot to send me messages"</strong> to <strong style={{ color: '#888' }}>+34 623 78 64 49</strong> on WhatsApp, then paste your API key above.{' '}
           <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noopener noreferrer" style={{ color: '#ff6b00', textDecoration: 'none' }}>
             Get your key →
           </a>
