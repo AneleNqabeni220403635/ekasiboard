@@ -9,6 +9,7 @@ export default function Profile() {
   const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [whatsappNotifications, setWhatsappNotifications] = useState(true)
   const [loading, setLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -21,6 +22,7 @@ export default function Profile() {
       setFullName(profile.full_name || '')
       setUsername(profile.username || '')
       setPhoneNumber(profile.phone_number || '')
+      setWhatsappNotifications(profile.whatsapp_notifications ?? true)
     }
   }, [user, profile])
 
@@ -35,6 +37,7 @@ export default function Profile() {
         full_name: fullName.trim(),
         username: username.trim(),
         phone_number: phoneNumber.trim(),
+        whatsapp_notifications: whatsappNotifications,
       })
       .eq('id', user.id)
 
@@ -44,6 +47,27 @@ export default function Profile() {
       setSuccess(true)
     }
     setLoading(false)
+  }
+
+  async function handleToggleNotifications(checked) {
+    setWhatsappNotifications(checked)
+    setError(null)
+    // optimistic UI — show saving state briefly
+    try {
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ whatsapp_notifications: checked })
+        .eq('id', user.id)
+
+      if (updateError) {
+        setError(updateError.message)
+      } else {
+        setSuccess(true)
+        setTimeout(() => setSuccess(false), 1800)
+      }
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   async function handleDeleteAccount() {
@@ -199,6 +223,18 @@ export default function Profile() {
           onFocus={e => e.target.style.borderColor = '#ff6b00'}
           onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
         />
+
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1rem', color: '#ddd', fontSize: '0.95rem', lineHeight: '1.4' }}>
+          <input
+            type="checkbox"
+            checked={whatsappNotifications}
+            onChange={e => handleToggleNotifications(e.target.checked)}
+            style={{ width: '1.1rem', height: '1.1rem', marginTop: '0.2rem' }}
+          />
+          <span>
+            Receive WhatsApp notifications for new community posts. Turn this off anytime.
+          </span>
+        </label>
 
         {/* Save button */}
         <button

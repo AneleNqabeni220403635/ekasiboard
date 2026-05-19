@@ -16,6 +16,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [whatsappNotifications, setWhatsappNotifications] = useState(true)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
@@ -49,6 +50,7 @@ export default function Register() {
       username,
       full_name: fullName,
       phone_number: phoneNumber.trim() || null,
+      whatsapp_notifications: whatsappNotifications,
     })
 
     if (profileError) {
@@ -195,6 +197,17 @@ export default function Register() {
           <p style={{ color: '#666', fontSize: '0.78rem', marginBottom: '1rem', marginTop: '-0.3rem' }}>
             Your number lets people contact you via WhatsApp on your posts.
           </p>
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '1.25rem', color: '#ddd', fontSize: '0.95rem', lineHeight: '1.4' }}>
+            <input
+              type="checkbox"
+              checked={whatsappNotifications}
+              onChange={e => setWhatsappNotifications(e.target.checked)}
+              style={{ width: '1.1rem', height: '1.1rem', marginTop: '0.2rem' }}
+            />
+            <span>
+              Send me WhatsApp notifications for new community posts. I can turn this off anytime in my profile.
+            </span>
+          </label>
 
           <button onClick={handleRegister} disabled={loading} style={{
             width: '100%',
