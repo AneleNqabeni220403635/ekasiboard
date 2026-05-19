@@ -206,5 +206,25 @@ h2 { font-size: clamp(1.25rem, 3.2vw, 1.6rem); }
 .leaflet-top, .leaflet-bottom { z-index: 600; }
 .leaflet-control-container { pointer-events: auto; }
 
+.category-filter-btn {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+.category-filter-btn:hover,
+.category-filter-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(255, 107, 0, 0.16);
+  border-color: #ff9b2f;
+}
+
+.post-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+.post-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+  border-color: #ff6b00;
+  background-color: rgba(31, 11, 1, 0.95);
+}
+
 /* If any ancestor uses transform, leaflet can misposition controls; this rule guards typical cases */
 .site-nav, footer, .container, .leaflet-container { transform: none !important }

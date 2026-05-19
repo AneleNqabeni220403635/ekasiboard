@@ -183,6 +183,7 @@ export default function Home() {
         }}
       >
         <button
+          className="category-filter-btn"
           onClick={() => setSelectedCategory(null)}
           style={{
             padding: '0.5rem 1.3rem',
@@ -203,6 +204,7 @@ export default function Home() {
         {categories.map(cat => (
           <button
             key={cat.id}
+            className="category-filter-btn"
             onClick={() => setSelectedCategory(cat.id)}
             style={{
               padding: '0.5rem 1.3rem',

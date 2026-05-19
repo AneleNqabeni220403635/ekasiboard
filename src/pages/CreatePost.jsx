@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { supabase } from '../supabase'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -23,10 +23,14 @@ export default function CreatePost() {
   const [availability, setAvailability] = useState('')
   const [tradingHours, setTradingHours] = useState('')
   const [highAlert, setHighAlert] = useState(false)
+  const [existingImageUrls, setExistingImageUrls] = useState([])
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isEdit, setIsEdit] = useState(false)
+  const [loadingPost, setLoadingPost] = useState(false)
   const { user } = useAuth()
   const navigate = useNavigate()
+  const { id: editPostId } = useParams()
 
   useEffect(() => {
     if (user === null) navigate('/login')
@@ -39,6 +43,36 @@ export default function CreatePost() {
     }
     fetchCategories()
   }, [])
+
+  useEffect(() => {
+    async function fetchPost() {
+      if (!editPostId || !user) return
+      setLoadingPost(true)
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .eq('id', editPostId)
+        .single()
+
+      if (error || !data || data.user_id !== user.id) {
+        navigate('/create-post')
+        return
+      }
+
+      setIsEdit(true)
+      setTitle(data.title || '')
+      setDescription(data.description || '')
+      setCategoryId(data.category_id)
+      setRewardAmount(data.reward_amount ? String(data.reward_amount) : '')
+      setEventDatetime(data.event_datetime ? new Date(data.event_datetime).toISOString().slice(0, 16) : '')
+      setAvailability(data.availability || '')
+      setTradingHours(data.trading_hours || '')
+      setHighAlert(data.high_alert || false)
+      setExistingImageUrls(data.image_urls || [])
+      setLoadingPost(false)
+    }
+    fetchPost()
+  }, [editPostId, user])
 
   function handleImageChange(e) {
     const files = Array.from(e.target.files)
@@ -54,6 +88,10 @@ export default function CreatePost() {
   function removeImage(index) {
     setImages(prev => prev.filter((_, i) => i !== index))
     setImagePreviews(prev => prev.filter((_, i) => i !== index))
+  }
+
+  function removeExistingImage(index) {
+    setExistingImageUrls(prev => prev.filter((_, i) => i !== index))
   }
 
   useEffect(() => {
@@ -88,8 +126,8 @@ export default function CreatePost() {
 
     setLoading(true)
 
-    // Upload images if any
-    let imageUrls = []
+    // Preserve existing images and upload any new ones
+    let imageUrls = [...existingImageUrls]
     for (const image of images) {
       const ext = image.name.split('.').pop()
       const filename = `${user.id}_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
@@ -105,27 +143,44 @@ export default function CreatePost() {
       imageUrls.push(urlData.publicUrl)
     }
 
-    const { error: insertError } = await supabase.from('posts').insert({
+    const payload = {
       title: title.trim(),
       description: description.trim(),
       category_id: categoryId,
-      user_id: user.id,
       reward_amount: rewardAmount ? parseFloat(rewardAmount) : null,
-      is_resolved: false,
       image_urls: imageUrls.length > 0 ? imageUrls : null,
       event_datetime: eventDatetime || null,
       availability: availability || null,
       trading_hours: tradingHours || null,
       high_alert: highAlert || false,
-    })
-
-    if (insertError) {
-      setError(insertError.message)
-      setLoading(false)
-      return
     }
 
-    navigate('/')
+    if (isEdit && editPostId) {
+      const { error: updateError } = await supabase
+        .from('posts')
+        .update(payload)
+        .eq('id', editPostId)
+
+      if (updateError) {
+        setError(updateError.message)
+        setLoading(false)
+        return
+      }
+      navigate(`/post/${editPostId}`)
+    } else {
+      const { error: insertError } = await supabase.from('posts').insert({
+        ...payload,
+        user_id: user.id,
+        is_resolved: false,
+      })
+
+      if (insertError) {
+        setError(insertError.message)
+        setLoading(false)
+        return
+      }
+      navigate('/')
+    }
   }
 
   const inputStyle = {
@@ -217,9 +272,11 @@ export default function CreatePost() {
           {/* Header — centered */}
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h1 style={{ color: '#ff6b00', fontSize: '1.9rem', marginBottom: '0.3rem', letterSpacing: '-0.5px' }}>
-              Create a Post
+              {isEdit ? 'Edit Post' : 'Create a Post'}
             </h1>
-            <p style={{ color: '#888', fontSize: '0.9rem' }}>Share something ekasi</p>
+            <p style={{ color: '#888', fontSize: '0.9rem' }}>
+              {isEdit ? 'Update your post details for the community' : 'Share something ekasi'}
+            </p>
             <div style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, transparent, #ff6b00, transparent)', margin: '0.9rem auto 0' }} />
           </div>
 
@@ -342,15 +399,39 @@ export default function CreatePost() {
           </label>
 
           {/* Image previews */}
-          {imagePreviews.length > 0 && (
+          {(existingImageUrls.length > 0 || imagePreviews.length > 0) && (
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(2, 1fr)',
               gap: '0.5rem',
               marginBottom: '1rem',
             }}>
+              {existingImageUrls.map((src, i) => (
+                <div key={`existing-${i}`} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
+                  <img src={src} alt={`existing-${i}`} style={{ width: '100%', height: '120px', objectFit: 'cover', display: 'block' }} />
+                  <button
+                    onClick={() => removeExistingImage(i)}
+                    style={{
+                      position: 'absolute',
+                      top: '4px',
+                      right: '4px',
+                      background: 'rgba(0,0,0,0.7)',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '50%',
+                      width: '24px',
+                      height: '24px',
+                      cursor: 'pointer',
+                      fontSize: '0.75rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >✕</button>
+                </div>
+              ))}
               {imagePreviews.map((src, i) => (
-                <div key={i} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
+                <div key={`preview-${i}`} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden' }}>
                   <img src={src} alt={`preview-${i}`} style={{ width: '100%', height: '120px', objectFit: 'cover', display: 'block' }} />
                   <button
                     onClick={() => removeImage(i)}
@@ -475,7 +556,7 @@ export default function CreatePost() {
               boxShadow: loading ? 'none' : '0 4px 16px rgba(255,107,0,0.35)',
               transition: 'opacity 0.2s, box-shadow 0.2s',
             }}>
-            {loading ? 'Posting...' : 'Post to eKasi Board'}
+            {loading ? (isEdit ? 'Saving...' : 'Posting...') : (isEdit ? 'Save Changes' : 'Post to eKasi Board')}
           </button>
         </div>
       </div>

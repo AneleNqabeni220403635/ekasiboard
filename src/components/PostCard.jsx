@@ -9,6 +9,7 @@ export default function PostCard({ post, currentUserId, onClose }) {
   const isEventCategory = (slug) => slug === 'events' || slug === 'announcements' || slug?.includes('event')
   const isJobCategory = (slug) => slug === 'jobs' || slug === 'services'
   const isBusinessCategory = (slug) => slug === 'local-businesses' || slug === 'businesses'
+  const wasEdited = post?.updated_at && post?.updated_at !== post?.created_at
 
   async function handleClose() {
     if (!post?.id) return
@@ -19,7 +20,7 @@ export default function PostCard({ post, currentUserId, onClose }) {
   }
 
   return (
-    <div style={{ background: '#1a1a1a', borderRadius: '12px', padding: '1.2rem', border: '1px solid #2a2a2a' }}>
+    <div className="post-card" style={{ background: '#1a1a1a', borderRadius: '12px', padding: '1.2rem', border: '1px solid #2a2a2a' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.6rem', alignItems: 'flex-start' }}>
         <div>
           <span style={{ background: '#ff6b0015', color: '#ff6b00', padding: '0.2rem 0.7rem', borderRadius: '10px', fontSize: '0.78rem', fontWeight: 'bold' }}>
@@ -28,13 +29,23 @@ export default function PostCard({ post, currentUserId, onClose }) {
           {isHighAlertCategory(post.categories?.slug) && post.high_alert && (
             <span style={{ marginLeft: '0.6rem', color: '#ff3b3b', fontWeight: 'bold' }}>🚨 High Alert</span>
           )}
+          {wasEdited && (
+            <span style={{ marginLeft: '0.6rem', color: '#aad400', fontWeight: 'bold' }}>Updated</span>
+          )}
         </div>
 
-        {currentUserId === post.user_id && !post.is_resolved && (
-          <button onClick={handleClose} disabled={closing} style={{ background: '#ff6b00', color: '#fff', border: 'none', padding: '0.4rem 0.7rem', borderRadius: '8px', cursor: 'pointer' }}>
-            {closing ? 'Closing...' : (post.categories?.slug === 'for-sale' ? 'Mark as Sold' : 'Close Post')}
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          {currentUserId === post.user_id && (
+            <Link to={`/edit-post/${post.id}`} style={{ color: '#fff', background: '#444', padding: '0.35rem 0.65rem', borderRadius: '8px', fontSize: '0.8rem', textDecoration: 'none' }}>
+              Edit
+            </Link>
+          )}
+          {currentUserId === post.user_id && !post.is_resolved && (
+            <button onClick={handleClose} disabled={closing} style={{ background: '#ff6b00', color: '#fff', border: 'none', padding: '0.4rem 0.7rem', borderRadius: '8px', cursor: 'pointer' }}>
+              {closing ? 'Closing...' : (isEventCategory(post.categories?.slug) ? 'Cancel Event' : post.categories?.slug === 'for-sale' ? 'Mark as Sold' : 'Close Post')}
+            </button>
+          )}
+        </div>
       </div>
 
       <Link to={`/post/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
