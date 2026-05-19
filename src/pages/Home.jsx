@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
 import { Link, useSearchParams } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import PostCard from '../components/PostCard'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -19,6 +21,7 @@ export default function Home() {
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [searchParams] = useSearchParams()
+  const { profile } = useAuth()
 
   const [displayText, setDisplayText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
@@ -69,6 +72,7 @@ export default function Home() {
     let query = supabase
       .from('posts')
       .select('*, categories(name, slug), profiles(username)')
+      .eq('is_resolved', false)
       .order('created_at', { ascending: false })
 
     if (selectedCategory) {
@@ -261,86 +265,9 @@ export default function Home() {
             gap: '1.5rem'
           }}
         >
-          {posts.map(post => (
-            <Link
-              to={`/post/${post.id}`}
-              key={post.id}
-              style={{ textDecoration: 'none' }}
-            >
-              <div
-                style={{
-                  background: '#1a1a1a',
-                  borderRadius: '12px',
-                  padding: '1.5rem',
-                  border: '1px solid #2a2a2a',
-                  transition: 'border 0.2s, box-shadow 0.2s',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = '#ff6b00'
-                  e.currentTarget.style.boxShadow =
-                    '0 4px 12px rgba(255,107,0,0.25)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = '#2a2a2a'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                <span
-                  style={{
-                    background: '#ff6b0015',
-                    color: '#ff6b00',
-                    padding: '0.2rem 0.8rem',
-                    borderRadius: '10px',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold'
-                  }}
-                >
-                  {post.categories?.name}
-                </span>
-
-                <h3
-                  style={{
-                    color: '#ffffff',
-                    margin: '0.8rem 0 0.5rem'
-                  }}
-                >
-                  {post.title}
-                </h3>
-
-                <p
-                  style={{
-                    color: '#c0c0c0',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.5'
-                  }}
-                >
-                  {post.description.substring(0, 100)}...
-                </p>
-
-                {post.reward_amount > 0 && (
-  <p style={{ color: '#00d26a', marginTop: '0.8rem', fontSize: '0.9rem', fontWeight: 'bold' }}>
-    {post.categories?.slug === 'lost-and-found' || post.categories?.slug === 'safety-alerts'
-      ? `💰 Reward: R${post.reward_amount}`
-      : post.categories?.slug === 'jobs'
-      ? `💼 Salary: R${post.reward_amount}`
-      : `🏷️ Price: R${post.reward_amount}`}
-  </p>
-)}
-
-                <p
-                  style={{
-                    color: '#888',
-                    fontSize: '0.8rem',
-                    marginTop: '0.8rem'
-                  }}
-                >
-                  by {post.profiles?.username} •{' '}
-                  {new Date(post.created_at).toLocaleDateString()}
-                </p>
-              </div>
-            </Link>
-          ))}
+                {posts.map(post => (
+                  <PostCard key={post.id} post={post} currentUserId={profile?.id} onClose={fetchPosts} />
+                ))}
         </div>
       )}
     </div>

@@ -19,6 +19,10 @@ export default function CreatePost() {
   const [categories, setCategories] = useState([])
   const [images, setImages] = useState([])
   const [imagePreviews, setImagePreviews] = useState([])
+  const [eventDatetime, setEventDatetime] = useState('')
+  const [availability, setAvailability] = useState('')
+  const [tradingHours, setTradingHours] = useState('')
+  const [highAlert, setHighAlert] = useState(false)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const { user } = useAuth()
@@ -109,6 +113,10 @@ export default function CreatePost() {
       reward_amount: rewardAmount ? parseFloat(rewardAmount) : null,
       is_resolved: false,
       image_urls: imageUrls.length > 0 ? imageUrls : null,
+      event_datetime: eventDatetime || null,
+      availability: availability || null,
+      trading_hours: tradingHours || null,
+      high_alert: highAlert || false,
     })
 
     if (insertError) {
@@ -253,6 +261,51 @@ export default function CreatePost() {
             onFocus={e => e.target.style.borderColor = '#ff6b00'}
             onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
           />
+
+          {/* Category-specific fields */}
+          {(() => {
+            const sel = categories.find(c => c.id === categoryId)
+            const slug = sel?.slug
+            if (!slug) return null
+
+            if (slug === 'events' || slug === 'announcements' || (slug && slug.includes('event'))) {
+              return (
+                <>
+                  <label style={labelStyle}>Event Date & Time</label>
+                  <input type="datetime-local" value={eventDatetime} onChange={e => setEventDatetime(e.target.value)} style={inputStyle} />
+                </>
+              )
+            }
+
+            if (slug === 'jobs' || slug === 'services') {
+              return (
+                <>
+                  <label style={labelStyle}>Availability</label>
+                  <input type="text" placeholder="e.g. Weekdays 9am–5pm" value={availability} onChange={e => setAvailability(e.target.value)} style={inputStyle} />
+                </>
+              )
+            }
+
+            if (slug === 'local-businesses' || slug === 'businesses') {
+              return (
+                <>
+                  <label style={labelStyle}>Trading Hours</label>
+                  <input type="text" placeholder="e.g. Mon–Fri 8am–4pm" value={tradingHours} onChange={e => setTradingHours(e.target.value)} style={inputStyle} />
+                </>
+              )
+            }
+
+            if (slug === 'lost-and-found' || slug === 'safety-alerts') {
+              return (
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+                  <input type="checkbox" checked={highAlert} onChange={e => setHighAlert(e.target.checked)} />
+                  <span style={{ color: '#fff' }}>High alert (send attention badge)</span>
+                </label>
+              )
+            }
+
+            return null
+          })()}
 
           {/* Images */}
           <label style={labelStyle}>
