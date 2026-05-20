@@ -58,8 +58,32 @@ export default function PostCard({ post, currentUserId, onClose }) {
         </div>
       </div>
 
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginTop: '0.9rem', marginBottom: '0.9rem' }}>
+        <div style={{ width: '44px', height: '44px', borderRadius: '50%', overflow: 'hidden', background: '#111', border: '1px solid #2a2a2a', flexShrink: 0 }}>
+          {post.profiles?.avatar_url ? (
+            <img
+              src={post.profiles.avatar_url}
+              alt={`${post.profiles?.username || 'User'} avatar`}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          ) : (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ff6b00', fontSize: '1.1rem' }}>
+              👤
+            </div>
+          )}
+        </div>
+        <div>
+          <p style={{ color: '#fff', fontWeight: 'bold', margin: 0, fontSize: '0.95rem' }}>
+            {post.profiles?.username || 'Community member'}
+          </p>
+          <p style={{ color: '#888', margin: 0, fontSize: '0.78rem' }}>
+            {new Date(post.created_at).toLocaleDateString()}
+          </p>
+        </div>
+      </div>
+
       <div onClick={handleViewPost} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') handleViewPost(e) }} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-        <h3 style={{ color: '#fff', margin: '0.6rem 0 0.4rem' }}>{post.title}</h3>
+        <h3 style={{ color: '#fff', margin: '0.2rem 0 0.4rem' }}>{post.title}</h3>
         <p style={{ color: '#c0c0c0', fontSize: '0.9rem', lineHeight: 1.4 }}>{post.description?.substring(0, 120)}{post.description && post.description.length > 120 ? '...' : ''}</p>
 
         {isEventCategory(post.categories?.slug) && post.event_datetime && (
@@ -83,8 +107,6 @@ export default function PostCard({ post, currentUserId, onClose }) {
                 : `🏷️ Price: R${post.reward_amount}`}
           </p>
         )}
-
-        <p style={{ color: '#888', fontSize: '0.8rem', marginTop: '0.8rem' }}>by {post.profiles?.username} • {new Date(post.created_at).toLocaleDateString()}</p>
       </div>
     </div>
   )

@@ -19,7 +19,7 @@ export default function PostDetail() {
     async function fetchPost() {
       const { data, error } = await supabase
         .from('posts')
-        .select('*, categories(id, name, slug), profiles(username, phone_number)')
+        .select('*, categories(id, name, slug), profiles(username, phone_number, avatar_url)')
         .eq('id', id)
         .single()
 

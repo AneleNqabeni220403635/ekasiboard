@@ -71,7 +71,7 @@ export default function Home() {
   async function fetchPosts() {
     let query = supabase
       .from('posts')
-      .select('*, categories(name, slug), profiles(username)')
+      .select('*, categories(name, slug), profiles(username, avatar_url)')
       .eq('is_resolved', false)
       .order('created_at', { ascending: false })
 

@@ -4,13 +4,15 @@ import { supabase } from '../supabase'
 import { useAuth } from '../context/AuthContext'
 
 export default function Profile() {
-  const { user, profile, logout } = useAuth()
+  const { user, profile, logout, refreshProfile } = useAuth()
   const navigate = useNavigate()
   const [fullName, setFullName] = useState('')
   const [username, setUsername] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [callmebotApiKey, setCallmebotApiKey] = useState('')
   const [whatsappNotifications, setWhatsappNotifications] = useState(true)
+  const [avatarFile, setAvatarFile] = useState(null)
+  const [avatarPreview, setAvatarPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [deleteLoading, setDeleteLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -25,32 +27,17 @@ export default function Profile() {
       setPhoneNumber(profile.phone_number || '')
       setCallmebotApiKey(profile.callmebot_apikey || '')
       setWhatsappNotifications(profile.whatsapp_notifications ?? true)
+      setAvatarPreview(profile.avatar_url || null)
     }
   }, [user, profile])
 
-  async function handleUpdate() {
-    setLoading(true)
-    setError(null)
-    setSuccess(false)
-
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        full_name: fullName.trim(),
-        username: username.trim(),
-        phone_number: phoneNumber.trim(),
-        callmebot_apikey: callmebotApiKey.trim(),
-        whatsapp_notifications: whatsappNotifications,
-      })
-      .eq('id', user.id)
-
-    if (updateError) {
-      setError(updateError.message)
-    } else {
-      setSuccess(true)
+  useEffect(() => {
+    return () => {
+      if (avatarPreview?.startsWith?.('blob:')) {
+        URL.revokeObjectURL(avatarPreview)
+      }
     }
-    setLoading(false)
-  }
+  }, [avatarPreview])
 
   async function handleToggleNotifications(checked) {
     setWhatsappNotifications(checked)
@@ -71,6 +58,74 @@ export default function Profile() {
     } catch (err) {
       setError(err.message)
     }
+  }
+
+  function handleAvatarChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file.')
+      return
+    }
+    setError(null)
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
+  }
+
+  async function uploadAvatar() {
+    if (!avatarFile) return profile?.avatar_url || null
+
+    const ext = avatarFile.name.split('.').pop()
+    const fileName = `${user.id}/${user.id}_${Date.now()}.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(fileName, avatarFile, { upsert: true })
+
+    if (uploadError) {
+      throw uploadError
+    }
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(fileName)
+    return data.publicUrl
+  }
+
+  async function handleUpdate() {
+    setLoading(true)
+    setError(null)
+    setSuccess(false)
+
+    try {
+      let avatar_url = profile?.avatar_url || null
+      if (avatarFile) {
+        avatar_url = await uploadAvatar()
+      }
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: fullName.trim(),
+          username: username.trim(),
+          phone_number: phoneNumber.trim(),
+          callmebot_apikey: callmebotApiKey.trim(),
+          whatsapp_notifications: whatsappNotifications,
+          avatar_url,
+        })
+        .eq('id', user.id)
+
+      if (updateError) {
+        setError(updateError.message)
+      } else {
+        setSuccess(true)
+        if (typeof refreshProfile === 'function') {
+          await refreshProfile()
+        }
+      }
+    } catch (err) {
+      setError(err.message)
+    }
+
+    setLoading(false)
   }
 
   async function handleDeleteAccount() {
@@ -142,17 +197,27 @@ export default function Profile() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
+            width: '80px',
+            height: '80px',
             borderRadius: '50%',
-            background: '#ff6b00',
+            overflow: 'hidden',
+            background: '#111',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '1.8rem',
             margin: '0 auto 1rem',
+            border: '2px solid #ff6b00'
           }}>
-            👤
+            {avatarPreview ? (
+              <img
+                src={avatarPreview}
+                alt="Profile avatar"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              '👤'
+            )}
           </div>
 
           <h1 style={{ color: '#ff6b00', fontSize: '1.6rem', marginBottom: '0.3rem' }}>
@@ -215,6 +280,33 @@ export default function Profile() {
           onFocus={e => e.target.style.borderColor = '#ff6b00'}
           onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'}
         />
+
+        <label style={labelStyle}>Profile Photo</label>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+          <div style={{ width: '76px', height: '76px', borderRadius: '50%', overflow: 'hidden', background: '#111', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {avatarPreview ? (
+              <img
+                src={avatarPreview}
+                alt="Avatar preview"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <span style={{ fontSize: '1.5rem' }}>👤</span>
+            )}
+          </div>
+
+          <div style={{ flex: 1 }}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ width: '100%', color: '#f5f5f5' }}
+            />
+            <p style={{ color: '#777', fontSize: '0.82rem', marginTop: '0.4rem' }}>
+              Upload a desktop or phone photo for your profile. Supported formats: JPG, PNG, WEBP.
+            </p>
+          </div>
+        </div>
 
         <label style={labelStyle}>Phone Number (for WhatsApp contact)</label>
         <input
