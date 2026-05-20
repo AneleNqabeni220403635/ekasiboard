@@ -42,8 +42,24 @@ export default function Navbar() {
       </Link>
 
       <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-
-        <AboutSection open={aboutOpen} onOpen={() => setAboutOpen(true)} onClose={() => setAboutOpen(false)} />
+        <button
+          type="button"
+          onClick={() => setAboutOpen(true)}
+          style={{
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            color: '#ff6b00',
+            background: 'transparent',
+            border: '1px solid #ff6b00',
+            padding: '0.4rem 1rem',
+            borderRadius: '6px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          About
+        </button>
 
         <Link
           to="/create-post"
@@ -197,6 +213,7 @@ export default function Navbar() {
           )}
         </div>
       )}
+      <AboutSection open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </nav>
   )
 }
