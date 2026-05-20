@@ -16,6 +16,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const [whatsappNotifications, setWhatsappNotifications] = useState(true)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -32,9 +33,17 @@ export default function Register() {
   async function handleRegister() {
     setLoading(true)
     setError(null)
+    setFieldErrors({})
 
-    if (!fullName || !username || !email || !password) {
-      setError('Please fill in all fields.')
+    const errors = {}
+    if (!fullName || !fullName.trim()) errors.fullName = 'Required'
+    if (!username || !username.trim()) errors.username = 'Required'
+    if (!email || !email.trim()) errors.email = 'Required'
+    if (!password || !password.trim()) errors.password = 'Required'
+
+    if (Object.keys(errors).length) {
+      setFieldErrors(errors)
+      setError('Please fill in all required fields.')
       setLoading(false)
       return
     }
@@ -157,25 +166,77 @@ export default function Register() {
             </div>
           )}
 
-          <input type="text" placeholder="Full Name" value={fullName}
-            onChange={e => setFullName(e.target.value)} style={inputStyle}
-            onFocus={e => e.target.style.borderColor = '#ff6b00'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'} />
+          <div style={{ marginBottom: '0.25rem' }}>
+            <label style={{ color: '#ddd', fontSize: '0.86rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <span>Full name <span style={{ color: '#ff6b00' }}>*</span></span>
+              {fieldErrors.fullName && <span style={{ color: '#ff6b6b', fontSize: '0.82rem' }}>{fieldErrors.fullName}</span>}
+            </label>
+            <input
+              type="text"
+              placeholder="Full Name"
+              required
+              aria-required="true"
+              value={fullName}
+              onChange={e => setFullName(e.target.value)}
+              style={{ ...inputStyle, border: fieldErrors.fullName ? '1px solid rgba(204,0,0,0.8)' : inputStyle.border }}
+              onFocus={e => e.target.style.borderColor = '#ff6b00'}
+              onBlur={e => e.target.style.borderColor = fieldErrors.fullName ? 'rgba(204,0,0,0.8)' : 'rgba(255,107,0,0.3)'}
+            />
+          </div>
 
-          <input type="text" placeholder="Username" value={username}
-            onChange={e => setUsername(e.target.value)} style={inputStyle}
-            onFocus={e => e.target.style.borderColor = '#ff6b00'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'} />
+          <div style={{ marginBottom: '0.25rem' }}>
+            <label style={{ color: '#ddd', fontSize: '0.86rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <span>Username <span style={{ color: '#ff6b00' }}>*</span></span>
+              {fieldErrors.username && <span style={{ color: '#ff6b6b', fontSize: '0.82rem' }}>{fieldErrors.username}</span>}
+            </label>
+            <input
+              type="text"
+              placeholder="Username"
+              required
+              aria-required="true"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              style={{ ...inputStyle, border: fieldErrors.username ? '1px solid rgba(204,0,0,0.8)' : inputStyle.border }}
+              onFocus={e => e.target.style.borderColor = '#ff6b00'}
+              onBlur={e => e.target.style.borderColor = fieldErrors.username ? 'rgba(204,0,0,0.8)' : 'rgba(255,107,0,0.3)'}
+            />
+          </div>
 
-          <input type="email" placeholder="Email" value={email}
-            onChange={e => setEmail(e.target.value)} style={inputStyle}
-            onFocus={e => e.target.style.borderColor = '#ff6b00'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'} />
+          <div style={{ marginBottom: '0.25rem' }}>
+            <label style={{ color: '#ddd', fontSize: '0.86rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <span>Email <span style={{ color: '#ff6b00' }}>*</span></span>
+              {fieldErrors.email && <span style={{ color: '#ff6b6b', fontSize: '0.82rem' }}>{fieldErrors.email}</span>}
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              required
+              aria-required="true"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              style={{ ...inputStyle, border: fieldErrors.email ? '1px solid rgba(204,0,0,0.8)' : inputStyle.border }}
+              onFocus={e => e.target.style.borderColor = '#ff6b00'}
+              onBlur={e => e.target.style.borderColor = fieldErrors.email ? 'rgba(204,0,0,0.8)' : 'rgba(255,107,0,0.3)'}
+            />
+          </div>
 
-          <input type="password" placeholder="Password" value={password}
-            onChange={e => setPassword(e.target.value)} style={inputStyle}
-            onFocus={e => e.target.style.borderColor = '#ff6b00'}
-            onBlur={e => e.target.style.borderColor = 'rgba(255,107,0,0.3)'} />
+          <div style={{ marginBottom: '0.25rem' }}>
+            <label style={{ color: '#ddd', fontSize: '0.86rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+              <span>Password <span style={{ color: '#ff6b00' }}>*</span></span>
+              {fieldErrors.password && <span style={{ color: '#ff6b6b', fontSize: '0.82rem' }}>{fieldErrors.password}</span>}
+            </label>
+            <input
+              type="password"
+              placeholder="Password"
+              required
+              aria-required="true"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              style={{ ...inputStyle, border: fieldErrors.password ? '1px solid rgba(204,0,0,0.8)' : inputStyle.border }}
+              onFocus={e => e.target.style.borderColor = '#ff6b00'}
+              onBlur={e => e.target.style.borderColor = fieldErrors.password ? 'rgba(204,0,0,0.8)' : 'rgba(255,107,0,0.3)'}
+            />
+          </div>
 
           {/* Phone number — optional, used for WhatsApp contact */}
           <div style={{ position: 'relative', marginBottom: '1rem' }}>

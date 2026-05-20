@@ -94,7 +94,15 @@ export default function Home() {
     >
 
       {/* Hero */}
-      <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+      <div style={{
+        textAlign: 'center',
+        marginBottom: '2.5rem',
+        padding: '1.5rem 1rem',
+        borderRadius: '24px',
+        background: 'rgba(255,107,0,0.05)',
+        boxShadow: '0 0 40px rgba(255,107,0,0.18), inset 0 0 18px rgba(255,107,0,0.08)',
+        border: '1px solid rgba(255,107,0,0.15)'
+      }}>
         <h1
           style={{
             fontSize: '2.8rem',
