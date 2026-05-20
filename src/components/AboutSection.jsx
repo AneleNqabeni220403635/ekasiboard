@@ -104,13 +104,17 @@ export default function AboutSection({ onOpen }) {
               </p>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', borderTop: '1px solid rgba(255,107,0,0.3)', paddingTop: '1.25rem' }}>
-                <div style={{ width: 50, height: 50, borderRadius: '50%', background: '#ff6b00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1rem', color: '#1a0a00', flexShrink: 0 }}>
-                  AN
+                <div style={{ width: 50, height: 50, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '1px solid #ff6b00', background: '#fff' }}>
+                  <img
+                    src="/images/ace-dev.jpeg"
+                    alt="Anele Nqabeni"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
                 </div>
                 <div>
                   <p style={{ margin: 0, fontWeight: 700, fontSize: '1rem', color: '#fff' }}>Anele Nqabeni</p>
                   <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: '#ff6b00', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                    Founder eKasi Board
+                    Founder of eKasi Board
                   </p>
                   <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: '#aa8866' }}>
                     From the kasi For the kasi.
