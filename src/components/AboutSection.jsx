@@ -46,7 +46,7 @@ export default function AboutSection({ open, onOpen, onClose }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 1100,
+            zIndex: 2000,
             padding: '1rem',
           }}
         >
@@ -63,6 +63,7 @@ export default function AboutSection({ open, onOpen, onClose }) {
               boxShadow: '0 24px 60px rgba(0, 0, 0, 0.45)',
               color: '#f5f5f5',
               fontFamily: "'Syne', sans-serif",
+              zIndex: 2001,
             }}
           >
             <div style={{ padding: '1.6rem 1.6rem 1rem', borderBottom: '2px solid #ff6b00' }}>
