@@ -166,9 +166,10 @@ export default function Navbar() {
         }}>
           <button
             type="button"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation()
               setMobileOpen(false)
-              setTimeout(() => setAboutOpen(true), 50)
+              setTimeout(() => setAboutOpen(true), 150)
             }}
             style={{
               color: '#ff6b00',
