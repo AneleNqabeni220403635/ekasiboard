@@ -282,30 +282,16 @@ export default function Profile() {
         />
 
         <label style={labelStyle}>Profile Photo</label>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
-          <div style={{ width: '76px', height: '76px', borderRadius: '50%', overflow: 'hidden', background: '#111', border: '1px solid #2a2a2a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {avatarPreview ? (
-              <img
-                src={avatarPreview}
-                alt="Avatar preview"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            ) : (
-              <span style={{ fontSize: '1.5rem' }}>👤</span>
-            )}
-          </div>
-
-          <div style={{ flex: 1 }}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              style={{ width: '100%', color: '#f5f5f5' }}
-            />
-            <p style={{ color: '#777', fontSize: '0.82rem', marginTop: '0.4rem' }}>
-              Upload a desktop or phone photo for your profile. Supported formats: JPG, PNG, WEBP.
-            </p>
-          </div>
+        <div style={{ marginBottom: '1rem' }}>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarChange}
+            style={{ width: '100%', color: '#f5f5f5' }}
+          />
+          <p style={{ color: '#777', fontSize: '0.82rem', marginTop: '0.4rem' }}>
+            Upload a photo for your profile. Supported formats: JPG, PNG, WEBP.
+          </p>
         </div>
 
         <label style={labelStyle}>Phone Number (for WhatsApp contact)</label>
