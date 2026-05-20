@@ -63,7 +63,7 @@ export default function AboutSection({ open, onClose }) {
           </p>
 
           <p style={{ marginBottom: '1rem' }}>
-            But eKasi Board is more than a safety net. Our community is full of skilled hardworking people craftsmen, service providers, and everyday hustlers who have something real to offer but no platform to reach their neighbours. Nobody wants a stranger knocking at their door and nobody wants to be that stranger either. eKasi Board removes that awkwardness entirely. Post what you do let the community see who you are and build the kind of trust that turns a neighbour into a loyal customer with dignity on your own terms.
+            But eKasi Board is more than a safety net. Our community is full of skilled hardworking people craftsmen, service providers and everyday hustlers who have something real to offer but no platform to reach their neighbours. Nobody wants a stranger knocking at their door and nobody wants to be that stranger either. eKasi Board removes that awkwardness entirely. Post what you do let the community see who you are and build the kind of trust that turns a neighbour into a loyal customer with dignity on your own terms.
           </p>
 
           <p style={{ marginBottom: '1.5rem' }}>
