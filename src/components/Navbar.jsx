@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState } from 'react'
+import AboutSection from './AboutSection'
 
 export default function Navbar() {
   const { user, profile, logout } = useAuth()
@@ -39,7 +40,9 @@ export default function Navbar() {
         eKasi Board
       </Link>
 
-      <div className="nav-actions" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+      <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+
+        <AboutSection />
 
         <Link
           to="/create-post"
@@ -160,6 +163,7 @@ export default function Navbar() {
           zIndex: 1100,
           minWidth: '180px'
         }}>
+          <AboutSection onOpen={() => setMobileOpen(false)} />
           <Link to="/create-post" style={{ color: '#fff', textDecoration: 'none', padding: '0.45rem 0.6rem', borderRadius: '6px', background: '#ff6b00', fontWeight: 'bold' }}>+ Post</Link>
           {user ? (
             <>
