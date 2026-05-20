@@ -1,16 +1,23 @@
 import { useState } from 'react'
 
-export default function AboutSection({ onOpen }) {
-  const [open, setOpen] = useState(false)
+export default function AboutSection({ open, onOpen, onClose }) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isOpen = open !== undefined ? open : internalOpen
 
   const openAbout = () => {
     if (onOpen) onOpen()
-    setOpen(true)
+    if (open === undefined) setInternalOpen(true)
+  }
+
+  const closeAbout = () => {
+    if (onClose) onClose()
+    if (open === undefined) setInternalOpen(false)
   }
 
   return (
     <>
       <button
+        type="button"
         onClick={openAbout}
         style={{
           textDecoration: 'none',
@@ -29,9 +36,9 @@ export default function AboutSection({ onOpen }) {
         About
       </button>
 
-      {open && (
+      {isOpen && (
         <div
-          onClick={() => setOpen(false)}
+          onClick={closeAbout}
           style={{
             position: 'fixed',
             inset: 0,
@@ -40,7 +47,7 @@ export default function AboutSection({ onOpen }) {
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 1100,
-            padding: '1.25rem',
+            padding: '1rem',
           }}
         >
           <div
@@ -103,20 +110,20 @@ export default function AboutSection({ onOpen }) {
                 We are more than a website. We are a digital extension of the streets the stoeps and the WhatsApp groups that already hold this community together. eKasi Board simply makes that reach a little wider.
               </p>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', borderTop: '1px solid rgba(255,107,0,0.3)', paddingTop: '1.25rem' }}>
-                <div style={{ width: 50, height: 50, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '1px solid #ff6b00', background: '#fff' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', borderTop: '1px solid rgba(255,107,0,0.3)', paddingTop: '1.5rem', flexWrap: 'wrap' }}>
+                <div style={{ width: 72, height: 72, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid #ff6b00', background: '#fff' }}>
                   <img
                     src="/images/ace-dev.jpeg"
                     alt="Anele Nqabeni"
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 </div>
-                <div>
-                  <p style={{ margin: 0, fontWeight: 700, fontSize: '1rem', color: '#fff' }}>Anele Nqabeni</p>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: '#ff6b00', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ margin: 0, fontWeight: 700, fontSize: '1.05rem', color: '#fff' }}>Anele Nqabeni</p>
+                  <p style={{ margin: '6px 0 0', fontSize: '0.78rem', color: '#ff6b00', letterSpacing: '1px', textTransform: 'uppercase' }}>
                     Founder of eKasi Board
                   </p>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: '#aa8866' }}>
+                  <p style={{ margin: '6px 0 0', fontSize: '0.82rem', color: '#aa8866' }}>
                     From the kasi For the kasi.
                   </p>
                 </div>

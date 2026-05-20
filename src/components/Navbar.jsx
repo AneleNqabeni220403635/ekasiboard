@@ -11,6 +11,7 @@ export default function Navbar() {
   const [postHover, setPostHover] = useState(false)
   const [logoutHover, setLogoutHover] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
 
   async function handleLogout() {
     await logout()
@@ -42,7 +43,7 @@ export default function Navbar() {
 
       <div className="nav-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
 
-        <AboutSection />
+        <AboutSection open={aboutOpen} onOpen={() => setAboutOpen(true)} onClose={() => setAboutOpen(false)} />
 
         <Link
           to="/create-post"
@@ -163,7 +164,21 @@ export default function Navbar() {
           zIndex: 1100,
           minWidth: '180px'
         }}>
-          <AboutSection onOpen={() => setMobileOpen(false)} />
+          <button
+            type="button"
+            onClick={() => { setAboutOpen(true); setMobileOpen(false) }}
+            style={{
+              color: '#ff6b00',
+              background: 'transparent',
+              border: '1px solid #ff6b00',
+              padding: '0.45rem 0.6rem',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            About
+          </button>
           <Link to="/create-post" style={{ color: '#fff', textDecoration: 'none', padding: '0.45rem 0.6rem', borderRadius: '6px', background: '#ff6b00', fontWeight: 'bold' }}>+ Post</Link>
           {user ? (
             <>
