@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../supabase'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { MapContainer, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -20,10 +20,12 @@ export default function Register() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
 
   if (user) {
-    navigate('/')
+    const dest = location.state?.from || '/'
+    navigate(dest)
     return null
   }
 
@@ -59,7 +61,8 @@ export default function Register() {
       return
     }
 
-    navigate('/')
+    const dest = location.state?.from || '/'
+    navigate(dest)
   }
 
   const inputStyle = {

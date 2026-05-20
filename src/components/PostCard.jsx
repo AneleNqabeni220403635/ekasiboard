@@ -1,9 +1,12 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../supabase'
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 export default function PostCard({ post, currentUserId, onClose }) {
   const [closing, setClosing] = useState(false)
+  const { user, loading } = useAuth()
+  const navigate = useNavigate()
 
   const isHighAlertCategory = (slug) => slug === 'lost-and-found' || slug === 'safety-alerts'
   const isEventCategory = (slug) => slug === 'events' || slug === 'announcements' || slug?.includes('event')
@@ -17,6 +20,13 @@ export default function PostCard({ post, currentUserId, onClose }) {
     const { error } = await supabase.from('posts').update({ is_resolved: true }).eq('id', post.id)
     setClosing(false)
     if (!error && typeof onClose === 'function') onClose()
+  }
+
+  async function handleViewPost(e) {
+    e.preventDefault()
+    if (loading) return
+    if (user) navigate(`/post/${post.id}`)
+    else navigate('/login', { state: { from: `/post/${post.id}` } })
   }
 
   return (
@@ -48,7 +58,7 @@ export default function PostCard({ post, currentUserId, onClose }) {
         </div>
       </div>
 
-      <Link to={`/post/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <div onClick={handleViewPost} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter') handleViewPost(e) }} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
         <h3 style={{ color: '#fff', margin: '0.6rem 0 0.4rem' }}>{post.title}</h3>
         <p style={{ color: '#c0c0c0', fontSize: '0.9rem', lineHeight: 1.4 }}>{post.description?.substring(0, 120)}{post.description && post.description.length > 120 ? '...' : ''}</p>
 
@@ -75,7 +85,7 @@ export default function PostCard({ post, currentUserId, onClose }) {
         )}
 
         <p style={{ color: '#888', fontSize: '0.8rem', marginTop: '0.8rem' }}>by {post.profiles?.username} • {new Date(post.created_at).toLocaleDateString()}</p>
-      </Link>
+      </div>
     </div>
   )
 }
