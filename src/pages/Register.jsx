@@ -140,9 +140,16 @@ export default function Register() {
           padding: '2.5rem',
           width: '100%',
           maxWidth: '420px',
-          border: '1px solid rgba(255,107,0,0.25)',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,107,0,0.08)',
+          border: '1px solid rgba(255,107,0.25)',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,107,0.08)',
         }}>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <Link to="/" style={{ color: '#ff6b00', fontWeight: '600', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem' }}>
+              <span style={{ transform: 'translateY(-1px)' }}>←</span>
+              Back to homepage
+            </Link>
+          </div>
 
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h1 style={{ color: '#ff6b00', fontSize: '1.9rem', marginBottom: '0.3rem', letterSpacing: '-0.5px' }}>
