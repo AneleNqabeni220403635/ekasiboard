@@ -76,7 +76,8 @@ export default function AboutSection({ open, onOpen, onClose }) {
                   </p>
                 </div>
                 <button
-                  onClick={() => setOpen(false)}
+                  type="button"
+                  onClick={closeAbout}
                   style={{ background: 'none', border: 'none', color: '#ff6b00', fontSize: '1.4rem', cursor: 'pointer', lineHeight: 1 }}
                 >
                   ✕
