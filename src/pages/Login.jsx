@@ -191,7 +191,7 @@ export default function Login() {
           eKasi Board
         </p>
         <p style={{ color: '#aaa', fontSize: '0.85rem' }}>
-          © 2026 eKasi Board · C-Section, Khayelitsha · Yonke into eC-Section 🏘️
+          © 2026 eKasi Board · C-Section, Khayelitsha 7784 · Yonke into eC-Section 🏘️
         </p>
       </footer>
     </div>

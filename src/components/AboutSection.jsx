@@ -44,7 +44,7 @@ export default function AboutSection({ open, onClose }) {
                 About eKasi Board 🏘️
               </h2>
               <p style={{ color: '#cc9966', fontSize: '0.8rem', margin: '6px 0 0', letterSpacing: '1.2px', textTransform: 'uppercase' }}>
-                C Section, Khayelitsha · Est. 2026
+                C Section, Khayelitsha 7784 · Est. 2026
               </p>
             </div>
             <button
